@@ -1,4 +1,4 @@
-package com.mycompany.myapp;
+package com.nao20010128nao.UCV;
 
 import android.app.*;
 import android.os.*;
