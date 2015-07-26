@@ -54,7 +54,7 @@ public class MainActivity extends Activity
 		try{
 			byte[] b=new String(new char[]{data}).getBytes("UTF-8");
 			switch (b.length){
-				case 1:return b[0];
+				case 1:return b[0] | 0;
 				case 2:return b[0] | b[1] << 8;
 				case 3:return b[0] | b[1] << 8 | b[2] << 16;
 				case 4:return b[0] | b[1] << 8 | b[2] << 16 | b[3] << 24;
