@@ -7,6 +7,7 @@ import android.widget.*;
 import android.view.View.*;
 import java.util.*;
 import java.io.*;
+import android.util.*;
 
 public class MainActivity extends Activity
 {
@@ -41,11 +42,11 @@ public class MainActivity extends Activity
 			if(convertView==null)
 				convertView=getLayoutInflater().inflate(R.layout.component,null);
 			TextView bigchar=(TextView)convertView.findViewById(R.id.bigchar);
-			TextView utf8cp=(TextView)convertView.findViewById(R.id.utf8cp);
+			//TextView utf8cp=(TextView)convertView.findViewById(R.id.utf8cp);
 			TextView charcode=(TextView)convertView.findViewById(R.id.charcode);
 			char data=getItem(position);
 			bigchar.setText(new String(new char[]{data}));
-			utf8cp.setText("UTF-8:"+utf8(data));
+			//utf8cp.setText("UTF-8:"+utf8(data));
 			charcode.setText("UTF-16:"+((int)data));
 			return convertView;
 		}
@@ -53,11 +54,20 @@ public class MainActivity extends Activity
 	public int utf8(char data){
 		try{
 			byte[] b=new String(new char[]{data}).getBytes("UTF-8");
+			Log.d("utf8","b.length:"+b.length);
+			int[] o=new int[b.length];
+			int tmp=0;
+			String s="";
+			for (byte t : b) {
+				s+=("0x" + Integer.toHexString(t & 0xFF) + " ");
+				o[tmp++]=Integer.parseInt(Integer.toHexString(t & 0xFF),16);
+			}
+			Log.d("utf8","bytes:"+s);
 			switch (b.length){
-				case 1:return b[0] | 0;
-				case 2:return b[0] | b[1] << 8;
-				case 3:return b[0] | b[1] << 8 | b[2] << 16;
-				case 4:return b[0] | b[1] << 8 | b[2] << 16 | b[3] << 24;
+				case 1:return o[0] | 0;
+				case 2:return o[0] << 8 | o[1];
+				case 3:return o[0] << 16| o[1] << 8 | o[2];
+				case 4:return o[0] << 24| o[1] << 16| o[2] << 8 | o[3];
 				default:return 0;
 			}
 		}catch (UnsupportedEncodingException e){
